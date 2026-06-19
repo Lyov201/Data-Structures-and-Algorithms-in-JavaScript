@@ -1,4 +1,4 @@
-class DArray {
+export class DArray {
     #size = 0;
     #capacity = 0;
     #arr = null;
@@ -82,12 +82,26 @@ class DArray {
         return this.#arr[this.#size - 1];
     }
 
-    size() {
+    get size() {
         return this.#size;
     }
 
-    capacity() {
+    set size(value) {
+        if(!Number.isInteger(value)) throw new Error("wrong size");
+        if(value < 0 || value > this.#capacity) throw new Error("wrong value");
+
+        this.#size = value
+    }
+
+    get capacity() {
         return this.#capacity;
+    }
+
+    set capacity(value) {
+        if(!Number.isInteger(value)) throw new Error("wrong capacity");
+        if(value < 0) throw new Error("Capacity cant be negative");
+
+        this.#capacity = value;
     }
 
     [Symbol.iterator]() {
