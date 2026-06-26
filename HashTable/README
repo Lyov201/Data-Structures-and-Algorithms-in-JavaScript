@@ -1,0 +1,203 @@
+# Hash Table
+
+A custom Hash Table implementation in JavaScript using **Separate Chaining** with linked lists for collision resolution.
+
+## Features
+
+- Separate Chaining collision handling
+- Automatic resizing (rehashing)
+- Custom djb2-based hash function
+- Supports `string` and `number` keys
+- Iterable using `for...of`
+- Key, value, and entry traversal
+- Configurable load factor
+- Bucket size inspection for debugging
+
+---
+
+## Time Complexity
+
+| Operation | Average | Worst |
+|-----------|:-------:|:-----:|
+| `put()` | O(1) | O(n) |
+| `get()` | O(1) | O(n) |
+| `remove()` | O(1) | O(n) |
+| `containsKey()` | O(1) | O(n) |
+| `containsValue()` | O(n) | O(n) |
+| `resize()` | O(n) | O(n) |
+
+---
+
+## Constructor
+
+```js
+const table = new HashTable(capacity, loadFactor);
+```
+
+### Parameters
+
+| Parameter | Default | Description |
+|-----------|---------|-------------|
+| `capacity` | `7` | Initial number of buckets |
+| `loadFactor` | `1.0` | Resize threshold `(0, 1]` |
+
+### Example
+
+```js
+const table = new HashTable();
+
+const table2 = new HashTable(16, 0.75);
+```
+
+---
+
+## API
+
+### Basic State
+
+```js
+size()
+capacity()
+isEmpty()
+clear()
+loadFactor()
+```
+
+### Core Operations
+
+```js
+put(key, value)
+get(key)
+remove(key)
+containsKey(key)
+containsValue(value)
+```
+
+### Entry Views
+
+```js
+keys()
+values()
+entries()
+```
+
+### Iteration
+
+The hash table is iterable.
+
+```js
+const table = new HashTable();
+
+table.put("a", 1);
+table.put("b", 2);
+
+for (const value of table) {
+    console.log(value);
+}
+```
+
+---
+
+## Example
+
+```js
+const table = new HashTable();
+
+table.put("name", "Levon");
+table.put("age", 22);
+table.put("city", "Yerevan");
+
+console.log(table.get("name"));
+// Levon
+
+console.log(table.containsKey("age"));
+// true
+
+console.log(table.remove("city"));
+// Yerevan
+
+console.log(table.keys());
+// ["name", "age"]
+
+console.log(table.values());
+// ["Levon", 22]
+```
+
+---
+
+## Collision Handling
+
+This implementation uses **Separate Chaining**.
+
+Each bucket stores a linked list of entries that share the same hash index.
+
+```text
+Bucket 0
+
+(head)
+   │
+   ▼
+(key1, value1)
+      │
+      ▼
+(key2, value2)
+      │
+      ▼
+(key3, value3)
+      │
+      ▼
+     null
+```
+
+---
+
+## Resizing
+
+When the current load factor reaches the configured threshold, the hash table automatically:
+
+1. Doubles its capacity.
+2. Creates a new bucket array.
+3. Recomputes the hash for every key.
+4. Reinserts all existing entries into the new table.
+
+This helps maintain an average lookup time close to **O(1)**.
+
+---
+
+## Supported Key Types
+
+- `string`
+- `number`
+
+---
+
+## Hash Function
+
+This implementation uses a **djb2-based** hashing algorithm.
+
+- String keys are hashed character by character.
+- Number keys are hashed digit by digit.
+- The final hash is converted to an unsigned 32-bit integer before calculating the bucket index.
+
+---
+
+## Debug Utilities
+
+```js
+bucketSizes()
+print()
+```
+
+These methods help visualize the internal state of the hash table during development and testing.
+
+---
+
+## Project Structure
+
+```text
+HashTable/
+├── hashTable.js
+├── list.js
+└── README.md
+```
+
